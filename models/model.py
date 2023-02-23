@@ -17,7 +17,7 @@ class BackboneModel(nn.Module):
     def forward(self, x):
         return self.model(x)
 
-class MyModel(nn.Module):
+class FurnitureModel(nn.Module):
     def __init__(self, backbone_name = 'resnet'):
         super().__init__()
 
