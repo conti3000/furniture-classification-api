@@ -3,8 +3,8 @@ LABEL maintainer="Jorge Roman"
 # Set the working directory
 WORKDIR /app
 # Copy the app code
-COPY app.py /app
-COPY test.py /app
+COPY app/app.py /app
+COPY app/test.py /app
 
 # Copy the models directory
 COPY models /app/models
