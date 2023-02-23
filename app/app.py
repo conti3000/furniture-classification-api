@@ -2,9 +2,13 @@ from flask import Flask, request, jsonify
 import torch
 import torchvision.transforms as transforms
 from PIL import Image
-#import torch.nn as nn
-#import torchvision.models as models
-from
+import torch.nn as nn
+import torchvision.models as models
+
+#from models import FurnitureModel, modify later to import accordingly
+#to the docker folder structure
+#TODO 
+#Check the Docker copied folders
 
 class BackboneModel(nn.Module):
     def __init__(self, name, pretrained=True):
@@ -40,7 +44,7 @@ class FurnitureModel(nn.Module):
 app = Flask(__name__)
 
 # Load the trained model
-model_path = "best_weight.pth"
+model_path = "./best_weights.pt"
 model = FurnitureModel()
 model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 model.eval()

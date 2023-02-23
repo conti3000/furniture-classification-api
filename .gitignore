@@ -2,3 +2,4 @@ models/data
 models/__pycache__
 app/test_image.jpg
 app/best_weights.pt
+app/__pycache__
