@@ -44,7 +44,7 @@ class FurnitureModel(nn.Module):
 app = Flask(__name__)
 
 # Load the trained model
-model_path = "./best_weights.pt"
+model_path = "app/best_weights.pt"
 model = FurnitureModel()
 model.load_state_dict(torch.load(model_path, map_location=torch.device('cpu')))
 model.eval()

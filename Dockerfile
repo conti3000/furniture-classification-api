@@ -10,11 +10,11 @@ COPY app/test.py /app
 COPY models /app/models
 
 # Install any additional packages
-RUN pip install -r requirements.txt
+RUN /bin/bash -o pipefail -c pip install -r requirements.txt
 
 # Expose port 5000 
 EXPOSE 5000
 # Set the environment variable for Flask 
 ENV FLASK_APP=app.py
 # Run the command to start the Flask app
-CMD ["flask", "run", "--host=0.0.0.0"]
+CMD ["python", "app.py"]
