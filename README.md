@@ -1,7 +1,7 @@
 # furniture-classification-api
 Simple API with Flask to serve a classification model from Pytorch
 This is a project to classify furniture images into three categories: bed, sofa, and chair. The project uses a pretrained ResNet model as the backbone and fine-tunes it on the dataset.
-
+The api accepts a >POST request with an image file and returns the class
 
 ## Requirements
 - Python 3.x
@@ -33,4 +33,4 @@ python app/test/py
 ```
 
 ## Additionaly you can download the weights:
-Copy an paste the following [best_weights](https://drive.google.com/file/d/1uMHvBxqMN7pxaX3FlYwuiSt4cyAVM64J/view?usp=share_link) weights into the </> app/folder </>
+Copy an paste the following [best_weights](https://drive.google.com/file/d/1uMHvBxqMN7pxaX3FlYwuiSt4cyAVM64J/view?usp=share_link) weights into the > app/folder
