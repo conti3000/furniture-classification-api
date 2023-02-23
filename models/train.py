@@ -3,8 +3,13 @@ from model import *
 from dataloader import *
 from torch.utils.data import DataLoader
 from sklearn import preprocessing
+from torchvision.transforms import *
+import torch
 import torch.optim as optim
 import time
+import sys
+import argparse
+import os
 
 def train(model, train_dataloader, criterion, optimizer, device, le):
       # Train one epoch
@@ -12,8 +17,8 @@ def train(model, train_dataloader, criterion, optimizer, device, le):
       train_loss = 0
       train_correct = 0
       for batch_idx, (inputs, targets) in enumerate(train_dataloader):
-          #inputs, targets = inputs.to(device), targets.to(device)
-          targets = torch.tensor(le.transform(targets))
+          inputs, targets = inputs.to(device), torch.tensor(le.transform(targets)).to(device)
+          #targets = torch.tensor(le.transform(targets))
           optimizer.zero_grad()
           outputs = model(inputs)
           loss = criterion(outputs, targets)
@@ -32,8 +37,8 @@ def evaluate(model, test_dataloader, criterion, device, le):
       test_loss = 0
       test_correct = 0
       for batch_idx, (inputs, targets) in enumerate(test_dataloader):
-          #inputs, targets = inputs.to(device), targets.to(device)
-          targets = torch.tensor(le.transform(targets))
+          inputs, targets = inputs.to(device), torch.tensor(le.transform(targets)).to(device)
+          #targets = torch.tensor(le.transform(targets))
           outputs = model(inputs)
           loss = criterion(outputs, targets)
 
@@ -54,7 +59,7 @@ def main():
     parser.add_argument('--model', type=str, default='resnet', help='Model architecture (resnet, regnet, efficientnet, vit)')
     parser.add_argument('--backbone', type=str, default='resnet50', help='Backbone architecture (resnet50, regnet, efficientnet, vit)')
     parser.add_argument('--pretrained', type=bool, default=True, help='Use pretrained weights for backbone')
-    parser.add_argument('--save_dir', type=str, default='saved_models', help='Directory to save trained model')
+    parser.add_argument('--save_dir', type=str, default='/', help='Directory to save trained model')
 
     args = parser.parse_args()
 
@@ -71,9 +76,9 @@ def main():
     #Modify dataloader and include self.classes as attribute
     #target should be only numerical
     labels = []
-    for label in os.listdir(data_dir):
+    for label in os.listdir(args.data_dir):
         if not label.startswith('.'):
-        labels.append(label)
+            labels.append(label)
     print(labels)
 
     le = preprocessing.LabelEncoder()
@@ -83,7 +88,7 @@ def main():
     #TODO
     #move hyperparams to .yml file
     batch_size = args.batch_size
-    learning_rate = arg.lr
+    learning_rate = args.lr
     num_epochs = args.num_epochs
 
     # Define device
@@ -93,6 +98,8 @@ def main():
     criterion = nn.CrossEntropyLoss()
     optimizer = optim.Adam(model.parameters(), lr=learning_rate)
     
+    out_path = os.path.join(args.save_dir, 'best_weights.pt')
+
     for epoch in range(num_epochs):
         start_time = time.time()
         best_acc = 0.0
@@ -104,7 +111,7 @@ def main():
         # Save best model weights
         if test_acc > best_acc:
             best_acc = test_acc
-            torch.save(model.state_dict(), 'best_weights.pt')
+            torch.save(model.state_dict(),out_path )
 
         # Print progress
         print(f"Epoch {epoch+1}/{num_epochs}: "
@@ -114,4 +121,5 @@ def main():
                 f"val_acc={test_acc:.4f} "
                 f"time={time.time()-start_time:.2f}s")
 
-
+if __name__ == "__main__":
+    main()
